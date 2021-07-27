@@ -11,10 +11,29 @@ interface Baz {
   userId: string;
 }
 
+// means X can be either Baz or Foo
 type X = Baz | Foo;
+
+type XX = Baz & {
+  password: string;
+};
+// XX is the combined types of Baz and the defined object, meaning:
+type XX = {
+  userId: string;
+  password: string;
+}
+
+
 interface Y extends Baz {
   password?: string;
 }
+
+// ^ this means Y is effectively
+interface Y {
+  userId: string;
+  password?: string;
+}
+// because `extends` folds in the attributes of Baz as a sort of base template
 ```
 
 ## typing objects & optional keys
@@ -95,5 +114,12 @@ const validationErrors: string[] | null = validatePayload(payload);
 
 // would show error since the return type of validatePayload is not a number
 const validationErrors: number = validatePayload(payload);
+
+// void means no value is returned
+// this function doesn't return anything
+const translateArg = (arg: string): void => {
+  // a side effect is likely called with void returning functions
+  arg = doSomething(arg);
+}
 
 ```
