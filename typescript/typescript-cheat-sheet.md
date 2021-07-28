@@ -123,3 +123,40 @@ const translateArg = (arg: string): void => {
 }
 
 ```
+
+
+## type declaration files, global or for modules and external dependencies
+
+[global types within project](https://basarat.gitbook.io/typescript/project/modules/globals)
+
+[DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) is
+a community that writes declaration packages for third-party libraries and
+platforms (yay open-source)
+
+[external resource on type declaration files](https://medium.com/jspoint/typescript-type-declaration-files-4b29077c43)
+- create `types/` or `@types/` directory, and within that create files or
+    directories + nested files for each module.
+    ```
+    src/
+      types/
+        global.d.ts -> global types available throughout project
+        importedModuleName.d.ts -> (named for the module being defined)
+    ```
+- in `tsconfig.json` direct the `typeRoots` config attribute to that directory
+    - ie. `"typeRoots": ["./node_modules/@types", "./src/types"]`
+
+- example declaration file:
+    ```
+    // InitConfig/index.d.ts or initConfig.d.ts
+    declare module InitConfig {
+      export const warn: (message: string, ...additionalData: any[]) => void;
+      export const err: (message: string, additionalData?: { [key: string]: unknown }) => void;
+
+      export default class InitConfig {
+        constructor(...options: any[]);
+        public config: { [key: string]: unknown };
+        public get: (key: string) => unknown;
+        public init: () => Promise<void>;
+      }
+    }
+    ```
